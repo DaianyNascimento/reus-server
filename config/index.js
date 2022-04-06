@@ -9,6 +9,9 @@ const logger = require("morgan");
 // https://www.npmjs.com/package/cookie-parser
 const cookieParser = require("cookie-parser");
 
+const session = require("express-session");
+const helmet = require("helmet");
+
 // ℹ️ Needed to accept from requests from 'the outside'. CORS stands for cross origin resource sharing
 // unless the request if from the same domain, by default express wont accept POST requests
 const cors = require("cors");
@@ -19,7 +22,22 @@ module.exports = (app) => {
   // Services like heroku use something called a proxy and you need to add this to your server
   app.set("trust proxy", 1);
 
-  // controls a very specific header to pass headers from the frontend
+  // Session & Cookies
+  app.use(
+    session({
+      secret: process.env.SESS_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
+        maxAge: 600000, // 60 * 1000 ms * 10 === 10 min
+      },
+    })
+  );
+
+  // Controls a very specific header to pass headers from the frontend
   app.use(
     cors({
       credentials: true,
@@ -27,9 +45,13 @@ module.exports = (app) => {
     })
   );
 
+  app.use(helmet());
+
   // In development environment the app logs
   app.use(logger("dev"));
+
   // To have access to `body` property in the request
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
+  app.use(cookieParser());
 };

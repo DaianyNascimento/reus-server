@@ -4,19 +4,21 @@ const donorSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, 'Name is required.'],
     },
     email: {
       type: String,
-      required: true,
+      required: [true, 'Email is required.'],
       unique: true,
+      lowercase: true,
     },
     password: {
       type: String,
-      required: true,
+      required: [true, 'Password is required.'],
     },
-    isDonor: {
-      type: Boolean,
+    role: {
+      type: String,
+      enum: ['donor', 'donee'],
       required: true,
     },
     productList: [{ type: Schema.Types.ObjectId, ref: "Product" }],
