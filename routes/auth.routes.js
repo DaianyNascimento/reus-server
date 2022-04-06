@@ -34,7 +34,7 @@ router.get("/session", (req, res) => {
     });
 });
 
-router.post("/signup", isLoggedOut, (req, res) => {
+router.post("/signup",  (req, res) => {
   const { username, password } = req.body;
 
   if (!username) {
@@ -102,7 +102,7 @@ router.post("/signup", isLoggedOut, (req, res) => {
   });
 });
 
-router.post("/login", isLoggedOut, (req, res, next) => {
+router.post("/login", (req, res, next) => {
   const { username, password } = req.body;
 
   if (!username) {
@@ -148,7 +148,7 @@ router.post("/login", isLoggedOut, (req, res, next) => {
     });
 });
 
-router.delete("/logout", isLoggedIn, (req, res) => {
+router.delete("/logout", (req, res) => {
   Session.findByIdAndDelete(req.headers.authorization)
     .then(() => {
       res.status(200).json({ message: "User was logged out" });
