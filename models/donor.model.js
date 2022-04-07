@@ -21,7 +21,7 @@ const donorSchema = new Schema({
     required: true,
   },
   productList: [{ type: Schema.Types.ObjectId, ref: "Product" }],
-  doneeList: [{ type: Schema.Types.ObjectId, ref: "Donee" }],
+  alertsList: [{ type: Schema.Types.ObjectId, ref: "Alert" }]
 });
 
 const Donor = model("Donor", donorSchema);
