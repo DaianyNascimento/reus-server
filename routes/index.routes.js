@@ -6,13 +6,10 @@ const profileRoutes = require("./profile.routes");
 const alertRoutes = require("./alert.routes");
 const productsRoutes = require("./products.routes");
 
-
-
 /* GET home page */ // http://localhost:5005/api
 router.get("/", (req, res, next) => {
   res.json("All good in here");
 });
-
 
 router.get("/getCsrfToken", csrfMiddleware, (req, res, next) => {
   res.json({ csrfToken: req.csrfToken() });
