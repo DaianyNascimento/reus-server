@@ -3,14 +3,16 @@ const router = require("express").Router();
 
 const authRoutes = require("./auth.routes");
 const profileRoutes = require("./profile.routes");
+const alertRoutes = require("./alert.routes");
 
 const Product = require("../models/product.model");
 
-/* GET home page */
+/* GET home page */ // http://localhost:5005/api
 router.get("/", (req, res, next) => {
   res.json("All good in here");
 });
 
+//http://localhost:5005/api/home
 router.get("/home", async (req, res, next) => {
   try{
       const productsAvailable = await Product.find();
@@ -29,5 +31,6 @@ router.get("/getCsrfToken", csrfMiddleware, (req, res, next) => {
 // You put the next routes here 👇
 router.use("/auth", authRoutes);
 router.use("/profile", profileRoutes)
+router.use("/checkproduct", alertRoutes)
 
 module.exports = router;

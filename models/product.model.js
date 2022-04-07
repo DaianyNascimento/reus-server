@@ -1,6 +1,5 @@
 const { Schema, model } = require("mongoose");
 
-
 const productSchema = new Schema({
   title: {
     type: String,
@@ -12,7 +11,8 @@ const productSchema = new Schema({
   image: {
     type: String,
     required: true,
-  }
+  },
+  donor: [{ type: Schema.Types.ObjectId, ref: "Donor" }]
 });
 
 const Product = model("Product", productSchema);
