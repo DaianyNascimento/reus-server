@@ -1,5 +1,6 @@
 const { Schema, model } = require("mongoose");
 
+
 const productSchema = new Schema({
   title: {
     type: String,
@@ -11,7 +12,7 @@ const productSchema = new Schema({
   image: {
     type: String,
     required: true,
-  },
+  }
 });
 
 const Product = model("Product", productSchema);

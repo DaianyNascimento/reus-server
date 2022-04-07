@@ -1,29 +1,36 @@
 const router = require("express").Router();
+const isLoggedIn = require("../middleware/isLoggedIn")
 
+const Donor = require("../models/donor.model");
+const Product = require("../models/product.model");
 
-
-const Donor = require("../models/Donor.model");
-const Product = require("../models/Product.model");
-
-// READ
-router.get("/home", async (req, res, next) => {
-    try{
-        const productsAvailable = await Product.find();
-        res.json({ productsAvailable });
-    } catch (err) {
-        res.status(400).json({
-          errorMessage: "Error fetching products from server! " + err.message,
-        });
-      }
-})
-
-/*
-router.get("/profile/addproduct", (req, res, next) => {
-
+// READ????
+// api/profile/
+/*router.get("/home", (req, res, next) => {
+  try{
+    const productsAvailable = await Product.find();
+    res.json({ productsAvailable });
+} catch (err) {
+    res.status(400).json({
+      errorMessage: "Error fetching products from server! " + err.message,
+    });
+  }
 })*/
 
-// CREATE
-router.post("/profile/addproduct",  async (req, res, next) => {
+router.get("/", isLoggedIn, async (req, res, next) => {
+  try{
+    const id = req.session.user._id;
+    const currentDonor = await Donor.findOne(id);
+    res.json({ currentDonor }); //Para depois retirar list of products e de donees
+} catch (err) {
+    res.status(400).json({
+      errorMessage: "Error fetching products from server! " + err.message,
+    });
+  }
+})
+
+// CREATE   api/profile/createproducts
+router.post("/createproduct", isLoggedIn,  async (req, res, next) => {
     try {
         const { title, description, image } = req.body;
         const donorId = req.session.user._id;
@@ -56,9 +63,9 @@ router.post("/profile/addproduct",  async (req, res, next) => {
 });
 
 
-//DELETE
+//DELETE api/profile/
 
-router.delete("/profile",  async (req, res, next) => {
+router.delete("/", isLoggedIn, async (req, res, next) => {
     try {
         const { id } = req.body;
         await Product.findByIdAndDelete(id);
@@ -70,8 +77,8 @@ router.delete("/profile",  async (req, res, next) => {
     }
 });
 
-//Update
-router.put("/profile",  async (req, res, next) => {
+//Update api/profile/
+router.put("/", isLoggedIn, async (req, res, next) => {
     try {
         
         const { _id, title, description, image } = req.body;
