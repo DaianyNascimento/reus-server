@@ -12,7 +12,7 @@ const productSchema = new Schema({
     type: String,
     required: true,
   },
-  donor: [{ type: Schema.Types.ObjectId, ref: "Donor" }]
+  donor: { type: Schema.Types.ObjectId, ref: "Donor" }
 });
 
 const Product = model("Product", productSchema);
