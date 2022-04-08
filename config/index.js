@@ -9,8 +9,11 @@ const logger = require("morgan");
 // https://www.npmjs.com/package/cookie-parser
 const cookieParser = require("cookie-parser");
 
-
 const session = require("express-session");
+
+const MongoStore = require("connect-mongo");
+const MONGO_URI = require("../db/index");
+
 
 const helmet = require("helmet");
 
@@ -30,6 +33,9 @@ module.exports = (app) => {
       secret: process.env.SESSION_SECRET,
       resave: true,
       saveUninitialized: false,
+      store: MongoStore.create({
+        mongoUrl: MONGO_URI,
+      }),
       cookie: {
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         secure: process.env.NODE_ENV === "production",

@@ -91,7 +91,7 @@ router.post("/login", async (req, res, next) => {
         throw Error();
       }
 
-      const sessionDonor = { email: donor.email, _id: donor._id };
+      const sessionDonor = { email: donor.email, _id: donor._id, role: donor.role };
       req.session.user = sessionDonor;
 
       return res.json({ message: "Successfully logged in!", user: sessionDonor });
@@ -109,7 +109,7 @@ router.post("/login", async (req, res, next) => {
         throw Error();
       }
 
-      const sessionDonee = { email: donee.email, _id: donee._id };
+      const sessionDonee = { email: donee.email, _id: donee._id, role: donee.role };
       req.session.user = sessionDonee;
 
       return res.json({ message: "Successfully logged in!", user: sessionDonee });

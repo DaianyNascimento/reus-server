@@ -1,5 +1,7 @@
 const router = require("express").Router();
-const isLoggedIn = require("../middleware/isLoggedIn")
+
+const isLoggedIn = require("../middleware/isLoggedIn");
+const isDonee = require("../middleware/isDonee");
 
 const Donor = require("../models/donor.model");
 const Donee = require("../models/donee.model");
@@ -7,7 +9,7 @@ const Product = require("../models/product.model");
 const Alert = require("../models/alert.model");
 
 
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", isLoggedIn, isDonee, async (req, res, next) => {
     try{
             const productsAvailable = await Product.find();
 
@@ -19,11 +21,10 @@ router.get("/:id", async (req, res, next) => {
               errorMessage: "Error fetching doners lists from server! " + err.message,
             });
     }
-        
-    
+          
 });
 
-router.post("/:id", async (req, res, next) => {
+router.post("/:id", isLoggedIn, isDonee, async (req, res, next) => {
     try {
         const doneeId = req.session.user._id;
         const productId = req.params.id;
