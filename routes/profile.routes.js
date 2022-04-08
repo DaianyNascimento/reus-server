@@ -8,7 +8,7 @@ const Donor = require("../models/donor.model");
 const Product = require("../models/product.model");
 
 // CRUD - app
-router.get("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
+router.get("/products", /*csrfMiddleware, isLoggedIn,*/ async (req, res, next) => {
   try {
     const products = await Product.find();
     res.json({ products });
@@ -19,9 +19,9 @@ router.get("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
   }
 });
 
-//UPDATE http://localhost:5005/api/products
-router.put("/products", csrfMiddleware, isLoggedIn, isDonor, async (req, res, next) => {
 
+//UPDATE
+router.put("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
 
   try {
     const { _id, title, description, image } = req.body;
@@ -44,16 +44,17 @@ router.put("/products", csrfMiddleware, isLoggedIn, isDonor, async (req, res, ne
   } catch (err) {
     res
       .status(400)
-      .json({ errorMessage: "Error in updating todo! " + err.message });
+      .json({ errorMessage: "Error in updating product! " + err.message });
   }
 });
 
-//DELETE http://localhost:5005/api/profile/
-router.delete("/", csrfMiddleware, isLoggedIn, isDonor, async (req, res, next) => {
+
+//DELETE 
+router.delete("/products/:id", csrfMiddleware, isLoggedIn, async (req, res, next) => {
   try {
-    const { id } = req.body;
+    const id = req.params.id;
     await Product.findByIdAndDelete(id);
-    res.json({ message: "Successfully delete product" + id });
+    res.json({ message: "Successfully delete product id: " + id });
   } catch (err) {
     res
       .status(400)
@@ -61,8 +62,10 @@ router.delete("/", csrfMiddleware, isLoggedIn, isDonor, async (req, res, next) =
   }
 });
 
-//POST   http://localhost:5005/api/profile/
-router.post("/products", csrfMiddleware, isLoggedIn, isDonor, async (req, res, next) => {
+
+//POST
+router.post("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
+
   try {
     const { title, description, image } = req.body;
     console.log("Should create a new product with", title);

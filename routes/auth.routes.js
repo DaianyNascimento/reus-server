@@ -67,7 +67,6 @@ router.post("/login", async (req, res, next) => {
   try {
     const { email, password, role } = req.body;
 
-    console.log("req.body on the login: ", req.body);
     if (!email || !password) {
       return res
         .status(400)
@@ -98,7 +97,7 @@ router.post("/login", async (req, res, next) => {
       return res.json({ message: "Successfully logged in!", user: sessionDonor });
 
     } else if (role == 'donee') {
-      
+
       const donee = await Donee.findOne({ email });
 
       if (!donee) {
