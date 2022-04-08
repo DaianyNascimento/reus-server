@@ -1,5 +1,5 @@
-const isDonee = (req, res, next) => {
-    if (req.session.role === 'donee') {
+function isDonee(req, res, next) {
+    if (req.session.user.role === 'donee') {
         next()
     } else {
     res.status(401)

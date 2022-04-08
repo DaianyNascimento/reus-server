@@ -1,7 +1,9 @@
 const router = require("express").Router();
+
 const csrfMiddleware = require("../middleware/csrfMiddleware");
 const isLoggedIn = require("../middleware/isLoggedIn");
 const isDonor = require("../middleware/isDonor")
+
 const Donor = require("../models/donor.model");
 const Product = require("../models/product.model");
 
@@ -17,8 +19,10 @@ router.get("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
   }
 });
 
-//UPDATE http://localhost:5005/api/profile/
-router.put("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
+//UPDATE http://localhost:5005/api/products
+router.put("/products", csrfMiddleware, isLoggedIn, isDonor, async (req, res, next) => {
+
+
   try {
     const { _id, title, description, image } = req.body;
 
@@ -45,7 +49,7 @@ router.put("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
 });
 
 //DELETE http://localhost:5005/api/profile/
-router.delete("/", csrfMiddleware, isLoggedIn, async (req, res, next) => {
+router.delete("/", csrfMiddleware, isLoggedIn, isDonor, async (req, res, next) => {
   try {
     const { id } = req.body;
     await Product.findByIdAndDelete(id);
@@ -58,7 +62,7 @@ router.delete("/", csrfMiddleware, isLoggedIn, async (req, res, next) => {
 });
 
 //POST   http://localhost:5005/api/profile/
-router.post("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
+router.post("/products", csrfMiddleware, isLoggedIn, isDonor, async (req, res, next) => {
   try {
     const { title, description, image } = req.body;
     console.log("Should create a new product with", title);
@@ -79,12 +83,12 @@ router.post("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
 
     const newProduct = new Product({ title, description, image });
     await newProduct.save();
-
-    /*const donorId = req.session.user._id;
+/*
+    const donorId = req.session.user._id;
     await Donor.findByIdAndUpdate(donorId, {
       $push: { productList: [newProduct] },
-    });*/
-
+    });
+*/
     res.json({ message: "Succesfully created product!", product: newProduct });
   } catch (err) {
     res.status(400).json({

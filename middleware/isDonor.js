@@ -1,5 +1,6 @@
-const isDonor = (req, res, next) => {
-    if (req.session.role === 'donor') {
+function isDonor(req, res, next) {
+    
+    if (req.session.user.role === 'donor') {
         next()
     } else {
     res.status(401)
