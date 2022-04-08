@@ -73,7 +73,7 @@ router.delete("/", /*isLoggedIn, isDonor, */ async (req, res, next) => {
     try {
         const { id } = req.body;
         await Product.findByIdAndDelete(id);
-        res.json({ message: "Product deleted "});
+        res.json({ message: "Product deleted " + id });
     } catch (err) {
       res
         .status(400)
@@ -87,11 +87,11 @@ router.put("/", /*isLoggedIn, isDonor, */ async (req, res, next) => {
         
         const { _id, title, description, image } = req.body;
       
-        const updateProduct = await Product.findByIdAndUpdate(
+        const updatedProduct = await Product.findByIdAndUpdate(
             _id, 
             { title, description, image });
         
-        res.json({ message: "Product updated " }); //incomplete
+        res.json({ message: "Product updated", updatedProduct: updatedProduct}); //incomplete
     } catch (err) {
       res
         .status(400)
