@@ -4,6 +4,14 @@ module.exports = (app) => {
     res.status(404).json({ errorMessage: "This route does not exist" });
   });
 
+  app.use(function (err, req, res, next) {
+    if (err.code !== "EBADCSRFTOKEN") return next(err);
+
+    // handle CSRF token errors here
+    res.status(403);
+    res.json("CSRF detected!!!");
+  });
+  
   app.use((err, req, res, next) => {
     // whenever you call next(err), this middleware will handle the error
     // always logs the error

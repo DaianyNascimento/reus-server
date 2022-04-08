@@ -19,7 +19,7 @@ const Product = require("../models/product.model");
 })*/
 
 //http://localhost:5005/api/profile/
-router.get("/", /*isLoggedIn, isDonor, */ async (req, res, next) => {
+router.get("/", isLoggedIn, /*isDonor, */ async (req, res, next) => {
   try{
     const id = req.session.user._id; 
     
@@ -34,7 +34,7 @@ router.get("/", /*isLoggedIn, isDonor, */ async (req, res, next) => {
 })
 
 // CREATE   http://localhost:5005/api/profile/
-router.post("/", /*isLoggedIn, isDonor, */async (req, res, next) => {
+router.post("/", isLoggedIn,/* isDonor, */async (req, res, next) => {
     try {
         const { title, description, image } = req.body;
         const donorId = req.session.user._id;
@@ -60,7 +60,7 @@ router.post("/", /*isLoggedIn, isDonor, */async (req, res, next) => {
         await Donor.findByIdAndUpdate(donorId, {
           $push: { productList: [newProduct] },
         });
-        res.json({ message: "Product created " });
+        res.json({ message: "Product created ", product: newProduct });
       } catch (err) {
         res.status(400).json({ errorMessage: "Internal Server Error Creating New Product" })
       }
@@ -69,7 +69,7 @@ router.post("/", /*isLoggedIn, isDonor, */async (req, res, next) => {
 
 //DELETE http://localhost:5005/api/profile/
 
-router.delete("/", /*isLoggedIn, isDonor, */ async (req, res, next) => {
+router.delete("/", isLoggedIn,/* isDonor, */ async (req, res, next) => {
     try {
         const { id } = req.body;
         await Product.findByIdAndDelete(id);
@@ -82,7 +82,7 @@ router.delete("/", /*isLoggedIn, isDonor, */ async (req, res, next) => {
 });
 
 //Update http://localhost:5005/api/profile/
-router.put("/", /*isLoggedIn, isDonor, */ async (req, res, next) => {
+router.put("/", isLoggedIn,/* isDonor, */ async (req, res, next) => {
     try {
         
         const { _id, title, description, image } = req.body;

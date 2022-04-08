@@ -8,7 +8,7 @@ const alertSchema = new Schema({
     type: Schema.Types.ObjectId, ref: "Donor", required: true
   },
   product: { 
-      type: Schema.Types.ObjectId, ref: "Product" 
+      type: Schema.Types.ObjectId, ref: "Product", required: true 
 }
 });
 
