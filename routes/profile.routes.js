@@ -8,7 +8,7 @@ const Donor = require("../models/donor.model");
 const Product = require("../models/product.model");
 
 // CRUD - app
-router.get("/products", /*csrfMiddleware, isLoggedIn,*/ async (req, res, next) => {
+router.get("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
   try {
     const products = await Product.find();
     res.json({ products });
