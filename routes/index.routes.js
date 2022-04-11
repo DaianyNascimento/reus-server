@@ -1,4 +1,4 @@
-const csrfMiddleware = require("../middleware/csrfMiddleware");
+//const csrfMiddleware = require("../middleware/csrfMiddleware");
 const router = require("express").Router();
 
 const authRoutes = require("./auth.routes");
@@ -9,9 +9,9 @@ router.get("/", (req, res, next) => {
   res.json("All good in here");
 });
 
-router.get("/getCsrfToken", /*csrfMiddleware,*/ (req, res, next) => {
+/*router.get("/getCsrfToken", csrfMiddleware, (req, res, next) => {
   res.json({ csrfToken: req.csrfToken() });
-});
+});*/
 
 // You put the next routes here 👇
 router.use("/auth", authRoutes);
