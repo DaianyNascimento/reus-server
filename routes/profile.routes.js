@@ -1,7 +1,9 @@
 const router = require("express").Router();
+
 const csrfMiddleware = require("../middleware/csrfMiddleware");
-//const isLoggedIn = require("../middleware/isLoggedIn");
-const isDonor = require("../middleware/isDonor")
+const isLoggedIn = require("../middleware/isLoggedIn");
+const isDonor = require("../middleware/isDonor");
+
 const Donor = require("../models/donor.model");
 const Product = require("../models/product.model");
 
@@ -18,7 +20,7 @@ router.get("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
 });
 
 //UPDATE
-router.put("/products", /*csrfMiddleware, isLoggedIn,*/ async (req, res, next) => {
+router.put("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
   try {
     const { _id, title, description, image } = req.body;
 
@@ -45,7 +47,7 @@ router.put("/products", /*csrfMiddleware, isLoggedIn,*/ async (req, res, next) =
 });
 
 //DELETE 
-router.delete("/products/:id", /*csrfMiddleware, isLoggedIn,*/ async (req, res, next) => {
+router.delete("/products/:id", csrfMiddleware, isLoggedIn, async (req, res, next) => {
   try {
     const id = req.params.id;
     await Product.findByIdAndDelete(id);
@@ -58,7 +60,7 @@ router.delete("/products/:id", /*csrfMiddleware, isLoggedIn,*/ async (req, res, 
 });
 
 //POST
-router.post("/products", /*csrfMiddleware, isLoggedIn,*/ async (req, res, next) => {
+router.post("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
   try {
     const { title, description, image } = req.body;
     console.log("Should create a new product with", title);
