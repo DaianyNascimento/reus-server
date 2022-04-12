@@ -6,14 +6,8 @@ const Donor = require("../models/donor.model");
 
 // CRUD - app
 router.get("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
-  // GET products from a donor:
   try {
     const currentDonorProducts = await Product.find({ donor: req.session.user._id });
-
-    for (let i = 0; i < currentDonorProducts.length; i++) {
-      console.log(currentDonorProducts[i].donor);
-    }
-
     res.json({ currentDonorProducts });
   } catch (err) {
     res.status(400).json({
@@ -53,7 +47,16 @@ router.put("/products", isLoggedIn, async (req, res, next) => {
 router.delete("/products/:id", isLoggedIn, async (req, res, next) => {
   try {
     const id = req.params.id;
-    await Product.findByIdAndDelete(id);
+    console.log("id to delete: ", id);
+    const deletedProduct = await Product.findByIdAndDelete(id);
+
+    const donorOfDeletedProduct = await Donor.findOne({ _id: deletedProduct.donor });
+    const productsList = donorOfDeletedProduct.productList;
+
+    for (let i = 0; i < productsList.length; i++) {
+      await Donor.findOneAndUpdate({ _id: donorOfDeletedProduct._id }, { "$pull": { productList: id } });
+    }
+
     res.json({ message: "Successfully delete product id: " + id });
   } catch (err) {
     res
