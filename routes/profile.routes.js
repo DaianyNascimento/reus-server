@@ -9,6 +9,11 @@ router.get("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
   // GET products from a donor:
   try {
     const currentDonorProducts = await Product.find({ donor: req.session.user._id });
+
+    for (let i = 0; i < currentDonorProducts.length; i++) {
+      console.log(currentDonorProducts[i].donor);
+    }
+
     res.json({ currentDonorProducts });
   } catch (err) {
     res.status(400).json({
@@ -89,20 +94,5 @@ router.post("/products", isLoggedIn, async (req, res, next) => {
     });
   }
 });
-
-//http://localhost:5005/api/profile/
-/*router.get("/", isLoggedIn, isDonor,  async (req, res, next) => {
-  try {
-    const id = req.session.user._id;
-
-    const donorData = await Donor.findOne({ _id: id });
-
-    res.json({ donorData }); //Para depois retirar list of products e de alerts
-  } catch (err) {
-    res.status(400).json({
-      errorMessage: "Error fetching products from server! " + err.message,
-    });
-  }
-})*/
 
 module.exports = router;
