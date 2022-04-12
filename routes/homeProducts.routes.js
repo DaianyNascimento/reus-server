@@ -11,13 +11,12 @@ const Alert = require("../models/alert.model");
 router.get("/", async (req, res, next) => {
   try {
     const productsAvailable = await Product.find();
-    const pendingAlerts = await Alert.find();
-    //await pendingAlerts.populate("donee");
-    //await pendingAlerts.populate("product");
 
-    console.log("This is pendingAlerts from the get route", pendingAlerts)
+    const pendingAlerts = await Alert.find().populate("donee donor product");
+    
+    //console.log("This is pendingAlerts from the get route", pendingAlerts)
 
-    res.json({ productsAvailable, pendingAlerts});
+    res.json({ productsAvailable, pendingAlerts });
   } catch (err) {
     res.status(400).json({
       errorMessage: "Error fetching products and alerts lists from server! " + err.message,
@@ -36,9 +35,10 @@ router.post("/:id", async (req, res, next) => {
       const donorToBeContacted = await Donor.findOne({donor: productRequested})
       //console.log("donorToBeContacted", donorToBeContacted)
       const newAlert = await Alert.create({ donee: doneeId, donor: donorToBeContacted, product: productRequested});
+      
+      await newAlert.populate("donee donor product")
       await newAlert.save();
-    
-      await newAlert.populate("donee product")
+
       console.log("This is newAlert", newAlert)
       res.json({newAlert : newAlert})
 
@@ -52,16 +52,6 @@ router.post("/:id", async (req, res, next) => {
 module.exports = router;
 
 
-
- //const doneeId = req.session.user._id;
-      //const productId = req.params.id;
-  
-      //const productRequested = await Product.findById({product: productId});
-      
-      //const donorToBeContacted = await Donor.findOne({productList: productId})
-      
-      //const newAlert = await Alert.create({ donee: doneeId, donor: donorToBeContacted, product: productRequested});
-     // await newAlert.save();
       
       /*
 
