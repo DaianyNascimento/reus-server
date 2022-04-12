@@ -28,19 +28,19 @@ router.get("/", csrfMiddleware, isLoggedIn, async (req, res, next) => {
 router.post("/:id", isLoggedIn, isDonee, async (req, res, next) => {
   try {
       const productId = req.params.id;
-      console.log("params", req.params.id)
-      console.log("productId", productId)
+      //console.log("params", req.params.id)
+      //console.log("productId", productId)
 
       const doneeId = req.session.user._id;
-      console.log("sessions", req.session.user._id)
-      console.log("This is the doneeId", doneeId)
+      //console.log("sessions", req.session.user._id)
+      //console.log("This is the doneeId", doneeId)
       
       const productRequested = await Product.findById({_id: productId});
-      console.log("productRequested", productRequested)
+      //console.log("productRequested", productRequested)
 
       const donorAlert = await Donor.findOne({_id : productRequested.donor});
 
-      console.log("This is donorAlert", donorAlert)
+      //console.log("This is donorAlert", donorAlert)
 
       const newAlert = await Alert.create({ donee: doneeId, donor: donorAlert, product: productRequested});
     
