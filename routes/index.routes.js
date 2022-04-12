@@ -1,4 +1,4 @@
-//const csrfMiddleware = require("../middleware/csrfMiddleware");
+const csrfMiddleware = require("../middleware/csrfMiddleware");
 const router = require("express").Router();
 
 const authRoutes = require("./auth.routes");
