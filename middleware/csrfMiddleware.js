@@ -1,5 +1,5 @@
-/*const csrf = require("csurf");
+const csrf = require("csurf");
 
 const csrfMiddleware = csrf();
 
-module.exports = csrfMiddleware;*/
+module.exports = csrfMiddleware;
