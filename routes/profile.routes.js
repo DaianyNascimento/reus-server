@@ -9,7 +9,6 @@ router.get("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
   // GET products from a donor:
   try {
     const currentDonorProducts = await Product.find({ donor: req.session.user._id });
-    // FIND ALERTS HERE 
     res.json({ currentDonorProducts });
   } catch (err) {
     res.status(400).json({
@@ -59,7 +58,7 @@ router.delete("/products/:id", isLoggedIn, async (req, res, next) => {
 });
 
 //POST
-router.post("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
+router.post("/products", isLoggedIn, async (req, res, next) => {
   try {
     const { title, description, image } = req.body;
     console.log("Should create a new product with", title);
