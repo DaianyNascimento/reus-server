@@ -1,17 +1,16 @@
 const router = require("express").Router();
-
 const csrfMiddleware = require("../middleware/csrfMiddleware");
 const isLoggedIn = require("../middleware/isLoggedIn");
-const isDonor = require("../middleware/isDonor");
-
-const Donor = require("../models/donor.model");
 const Product = require("../models/product.model");
+const Donor = require("../models/donor.model");
 
 // CRUD - app
 router.get("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
+  // GET products from a donor:
   try {
-    const products = await Product.find();
-    res.json({ products });
+    const currentDonorProducts = await Product.find({ donor: req.session.user._id });
+    // FIND ALERTS HERE 
+    res.json({ currentDonorProducts });
   } catch (err) {
     res.status(400).json({
       errorMessage: "Error in fetching products from server! " + err.message,
@@ -20,7 +19,7 @@ router.get("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
 });
 
 //UPDATE
-router.put("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
+router.put("/products", isLoggedIn, async (req, res, next) => {
   try {
     const { _id, title, description, image } = req.body;
 
@@ -47,7 +46,7 @@ router.put("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
 });
 
 //DELETE 
-router.delete("/products/:id", csrfMiddleware, isLoggedIn, async (req, res, next) => {
+router.delete("/products/:id", isLoggedIn, async (req, res, next) => {
   try {
     const id = req.params.id;
     await Product.findByIdAndDelete(id);
@@ -79,14 +78,11 @@ router.post("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
         .json({ errorMessage: "Please provide an image of your product." });
     }
 
-    const newProduct = new Product({ title, description, image });
+    const newProduct = new Product({ title, description, image, donor: req.session.user._id });
     await newProduct.save();
-    /*
-        const donorId = req.session.user._id;
-        await Donor.findByIdAndUpdate(donorId, {
-          $push: { productList: [newProduct] },
-        });
-    */
+
+    await Donor.findOneAndUpdate({ _id: req.session.user._id }, { "$push": { productList: newProduct } }, { new: true }).populate('productList');
+
     res.json({ message: "Succesfully created product!", product: newProduct });
   } catch (err) {
     res.status(400).json({
