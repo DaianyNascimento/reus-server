@@ -1,5 +1,4 @@
 function isDonor(req, res, next) {
-
     if (req.session.user.role === 'donor') {
         next();
     } else {
