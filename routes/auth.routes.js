@@ -11,6 +11,7 @@ const Donor = require("../models/donor.model");
 const Donee = require("../models/donee.model");
 
 router.post("/signup", async (req, res) => {
+  console.log(req.body);
   try {
     const { name, email, password, role } = req.body;
 
