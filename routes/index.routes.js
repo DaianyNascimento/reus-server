@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const authRoutes = require("./auth.routes");
 const homeProductsRoutes = require("./homeProducts.routes");
+const csrfMiddleware = require("../middleware/csrfMiddleware");
 
 /* GET home page */
 router.get("/", (req, res, next) => {
