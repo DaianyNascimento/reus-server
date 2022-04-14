@@ -3,12 +3,14 @@ const csrfMiddleware = require("../middleware/csrfMiddleware");
 const isLoggedIn = require("../middleware/isLoggedIn");
 const Product = require("../models/product.model");
 const Donor = require("../models/donor.model");
+const Alert = require("../models/alert.model");
 
 // CRUD - app
 router.get("/products", csrfMiddleware, isLoggedIn, async (req, res, next) => {
   try {
     const currentDonorProducts = await Product.find({ donor: req.session.user._id });
-    res.json({ currentDonorProducts });
+    const [currentDonor] = await Donor.find({ _id: req.session.user._id });
+    res.json({ currentDonorProducts, currentDonor });
   } catch (err) {
     res.status(400).json({
       errorMessage: "Error in fetching products from server! " + err.message,
@@ -47,13 +49,13 @@ router.put("/products", isLoggedIn, async (req, res, next) => {
 router.delete("/products/:id", isLoggedIn, async (req, res, next) => {
   try {
     const id = req.params.id;
-    console.log("id to delete: ", id);
     const deletedProduct = await Product.findByIdAndDelete(id);
+
+    alertToDelete = await Alert.findOne({ product: id });
+    await Alert.findByIdAndDelete(alertToDelete._id);
 
     const donorOfDeletedProduct = await Donor.findOne({ _id: deletedProduct.donor });
     const productsList = donorOfDeletedProduct.productList;
-
-    //Delete alert after a product is deleted
 
     for (let i = 0; i < productsList.length; i++) {
       await Donor.findOneAndUpdate({ _id: donorOfDeletedProduct._id }, { "$pull": { productList: id } });
