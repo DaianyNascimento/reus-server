@@ -6,6 +6,9 @@
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
+  "engines": {
+    "node": "16.14.2"
+  },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "axios": "^0.26.1",
