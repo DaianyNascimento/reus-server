@@ -52,7 +52,9 @@ router.delete("/products/:id", isLoggedIn, async (req, res, next) => {
     const deletedProduct = await Product.findByIdAndDelete(id);
 
     alertToDelete = await Alert.findOne({ product: id });
-    await Alert.findByIdAndDelete(alertToDelete._id);
+    if (alertToDelete !== null) {
+      await Alert.findByIdAndDelete(alertToDelete._id);
+    }
 
     const donorOfDeletedProduct = await Donor.findOne({ _id: deletedProduct.donor });
     const productsList = donorOfDeletedProduct.productList;
